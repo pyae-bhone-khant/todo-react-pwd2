@@ -1,1 +1,39 @@
-@import "tailwindcss";
+@import "tailwindcss"; 
+
+@layer base {
+  :root {
+    --bg-color: white;
+    --text-color: white;            /* Light mode text should be dark */
+    --card-bg: #e2e8f0;            /* Light card */
+    --button-bg: #1e40af;          /* Blue button */
+    --border-color: #f87171;       /* Light red */
+  }
+
+  .dark {
+    --bg-color: #0f172a;          /* Dark background */
+    --text-color: white;          /* White text */
+    --card-bg: #092655;           /* Dark card */
+    --button-bg: #334155;         /* Darker gray */
+    --border-color: #dc2626;      /* Dark red */
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+}
+
+/* Card Styling */
+.card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  @apply rounded-2xl p-4 shadow-md transition duration-300;
+}
+
+/* Button Styling */
+.btn {
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  @apply px-4 py-2 rounded-xl font-bold transition duration-300;
+}

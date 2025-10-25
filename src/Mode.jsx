@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function Header({ data }) {
+export default function Mode({ data }) {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function Header({ data }) {
 
   return (
     <div className="w-full flex justify-between h-15 text-center items-center px-80 card">
-      <h1 className="text-3xl   text-sky-800  font-bold">Todo <span className="text-red-600">( {data.length} )</span></h1>
+      <h1 className="text-3xl font-bold">Todo <span className="text-red-600">( {data.length} )</span></h1>
       <button 
         className="btn"
         onClick={() => setDarkMode(!darkMode)}

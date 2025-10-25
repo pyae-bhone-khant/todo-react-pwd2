@@ -1,71 +1,80 @@
 import Item from './Item.jsx'
-import { useState } from 'react'
-import { useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Header from './Header.jsx'
 
 export default function App() { 
   const nameInput = useRef()
+  const [darkMode, setDarkMode] = useState(false)
   const [data, setData] = useState([
     { id: 3, name: 'React' , done : false},
     { id: 2, name: 'JavaScript', done : false },
     { id: 1, name: 'Tailwind CSS' , done : true}
   ])
 
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [darkMode])
+
   const add = () => {
-    const id = data[0].id + 1;
-    const name = nameInput.current.value;
-    setData([{ id, name  , done : false}, ...data]);
-  } 
-   const del = (id) => {
-    setData(data.filter(item => item.id !== id));
-   }
-    
-   const toggle = id => {
-  setData(data.map(item => 
-    item.id === id 
-      ? { ...item, done: !item.done } 
-      : item
-  ));
-};
+    const id = data.length ? data[0].id + 1 : 1;
+    const name = nameInput.current.value.trim();
+    if (!name) return;
+    setData([{ id, name, done: false }, ...data]);
+  }
 
-     
+  const del = id => setData(data.filter(item => item.id !== id));
+  
+  const toggle = id => {
+    setData(data.map(item => 
+      item.id === id ? { ...item, done: !item.done } : item
+    ));
+  };
+
   return (
-    <>
-      <Header data={data} />
-      <div className='flex justify-center mt-10'>
-               <form  className='' onSubmit={ e => {
-                e.preventDefault();
-                add();
-                e.currentTarget.reset();
-               }}  > 
-                   <input  placeholder='Write some text' className='w-100 h-10 border-2 rounded-2xl border-red-400' type="text" ref={nameInput} />
-        <button  className= ' ml-3 text-white font-bold rounded hover:bg-red-400   px-12 py-2 bg-blue-600'>Add</button>
-               </form>
-      </div>
-      <div className=" flex justify-center    ">
-
-        <ol className="bg-slate-300  w-200  h-full rounded-2xl flex  flex-col justify-center  text-center items-start px-4  mt-10 space-y-10 ">
-
-          {data.filter(item => !item.done).map(item => <Item key={item.id} del={del} item={item} toggle={toggle} />)} 
-          
-        </ol> 
-                 
-      </div>  
-       <div className='flex justify-center'>
-
-      <div className='mt-10 border border-orange-500 w-300 flex items-center text-center justify-center' ></div>  
-       </div>
-         <div className=" flex justify-center    ">
-
-        <ol className="bg-slate-300  w-200  h-full rounded-2xl flex  flex-col justify-center  text-center items-start px-4  mt-20 space-y-10 ">
-
-          {data.filter(item => item.done).map(item => <Item key={item.id} del={del} item={item} toggle={toggle} />)} 
-          
-        </ol> 
-         <hr /> 
-          
-      </div> 
+    <div className=" min-h-screen  transition-colors duration-300" 
+      style={{ backgroundColor: darkMode ? 'var( --bg-color)' : 'var(--bg-color)', color: darkMode ? 'var(--text-color)' : 'var(--text-color)' }}>
+      <Header data={data} darkMode={darkMode} setDarkMode={setDarkMode} />
       
-    </>
+      <div className='   flex justify-center mt-10'>
+        <form onSubmit={ e => {
+          e.preventDefault();
+          add();
+          e.currentTarget.reset(); 
+        }}> 
+          <input 
+            placeholder='Write some text'
+            className='w-100  text-sky-800 h-10 border-2 rounded-2xl'
+            style={{ borderColor: 'var(--border-color)' }}
+            type="text"
+            ref={nameInput}
+          />
+          <button className='btn ml-3  text-white hover:opacity-80'>Add</button>
+        </form>
+      </div>
+
+      <div className="flex justify-center">
+        <ol className="card w-200 h-full mt-10 space-y-5 text-left">
+          {data.filter(item => !item.done).map(item => 
+            <Item key={item.id} del={del} item={item} toggle={toggle} />
+          )}
+        </ol>
+      </div>
+
+      <div className='flex justify-center'>
+        <div className='mt-10 w-300 flex items-center text-center justify-center' style={{ border: `1px solid var(--border-color)` }}></div>  
+      </div>
+      
+      <div className="flex justify-center">
+        <ol className="card w-200 h-full mt-10 space-y-5 text-left">
+          {data.filter(item => item.done).map(item => 
+            <Item key={item.id} del={del} item={item} toggle={toggle} />
+          )}
+        </ol>
+      </div>
+    </div>  
   )
-}    
+}
